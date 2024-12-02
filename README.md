@@ -56,31 +56,38 @@ git clone https://github.com/yourusername/mbta-station-finder.git
 cd mbta-station-finder
 ```
 
-2. Install required packages:
+2. Create and activate a virtual environment (recommended):
 ```bash
-pip install flask flask-wtf python-dotenv
+python -m venv venv
+source venv/bin/activate  # On Windows, use: venv\Scripts\activate
 ```
 
-3. Create a `.env` file in the project root and add your API keys:
+3. Install the required packages:
+```bash
+pip install -r requirements.txt
 ```
-MAPBOX_TOKEN=your_mapbox_token_here
-MBTA_API_KEY=your_mbta_api_key_here
-OPENWEATHER_API_KEY=your_openweather_api_key_here
+
+4. Create a `.env` file in the root directory with your API keys:
+```
+MAPBOX_TOKEN=your_mapbox_token
+MBTA_API_KEY=your_mbta_api_key
+OPENWEATHER_API_KEY=your_openweather_api_key
 ```
 
 ## Usage
 
-1. Run the application:
+1. Make sure your virtual environment is activated
+2. Run the Flask application:
 ```bash
 python app.py
 ```
 
-2. Open your web browser and navigate to:
+3. Open your web browser and navigate to:
 ```
 http://127.0.0.1:5000/
 ```
 
-3. Enter a location in the Greater Boston area (e.g., "Fenway Park", "Harvard Square")
+4. Enter a location in the Greater Boston area (e.g., "Fenway Park", "Harvard Square")
 
 ## Project Structure
 

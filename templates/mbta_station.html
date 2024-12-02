@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nearest MBTA Stations</title>
+    <style>
+        :root {
+            --primary-color: #005b96;
+            --secondary-color: #b3cde0;
+            --accent-color: #03396c;
+            --background-color: #f5f7fa;
+            --text-color: #2d3748;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        .station {
+            background-color: white;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .station h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+
+        .station-info {
+            margin: 1rem 0;
+        }
+
+        .station-info p {
+            margin: 0.5rem 0;
+        }
+
+        .arrivals {
+            background-color: var(--background-color);
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .arrivals h3 {
+            color: var(--accent-color);
+            margin-top: 0;
+        }
+
+        .arrival-item {
+            padding: 0.5rem;
+            border-bottom: 1px solid var(--secondary-color);
+        }
+
+        .arrival-item:last-child {
+            border-bottom: none;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-top: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: var(--accent-color);
+        }
+
+        .accessibility {
+            display: inline-block;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .accessible {
+            background-color: #c6f6d5;
+            color: #2f855a;
+        }
+
+        .not-accessible {
+            background-color: #fed7d7;
+            color: #c53030;
+        }
+
+        .status-alert {
+            color: #d97706;  /* Amber/orange color for alerts */
+            font-weight: 500;
+        }
+
+        .weather-card {
+            background-color: white;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .weather-main {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--secondary-color);
+        }
+
+        .weather-icon {
+            width: 64px;
+            height: 64px;
+            margin-right: 1rem;
+        }
+
+        .weather-info {
+            flex-grow: 1;
+        }
+
+        .temperature {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .description {
+            color: var(--text-color);
+            font-size: 1.1rem;
+            text-transform: capitalize;
+        }
+
+        .weather-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .weather-detail {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .weather-detail .label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .weather-detail .value {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .weather-details {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Nearest MBTA Stations to {{ place_name }}</h1>
+
+        {% if stations.weather %}
+        <div class="weather-card">
+            <div class="weather-main">
+                <img src="https://openweathermap.org/img/wn/{{ stations.weather.icon }}@2x.png" 
+                     alt="Weather icon" 
+                     class="weather-icon">
+                <div class="weather-info">
+                    <div class="temperature">{{ stations.weather.temperature }}°F</div>
+                    <div class="description">{{ stations.weather.description }}</div>
+                </div>
+            </div>
+            <div class="weather-details">
+                <div class="weather-detail">
+                    <span class="label">Feels like:</span>
+                    <span class="value">{{ stations.weather.feels_like }}°F</span>
+                </div>
+                <div class="weather-detail">
+                    <span class="label">Humidity:</span>
+                    <span class="value">{{ stations.weather.humidity }}%</span>
+                </div>
+                <div class="weather-detail">
+                    <span class="label">Wind:</span>
+                    <span class="value">{{ stations.weather.wind_speed }} mph</span>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if stations.subway %}
+        <div class="station">
+            <h2>Nearest Subway Station</h2>
+            <div class="station-info">
+                <p><strong>Station:</strong> {{ stations.subway.name }}</p>
+                <p><strong>Distance:</strong> {{ stations.subway.distance }}</p>
+                <p><strong>Accessibility:</strong> 
+                    <span class="accessibility {% if stations.subway.wheelchair_accessible %}accessible{% else %}not-accessible{% endif %}">
+                        {{ "Wheelchair Accessible" if stations.subway.wheelchair_accessible else "Not Wheelchair Accessible" }}
+                    </span>
+                </p>
+            </div>
+            
+            {% if stations.subway.arrivals %}
+            <div class="arrivals">
+                <h3>Upcoming Arrivals</h3>
+                {% for arrival in stations.subway.arrivals %}
+                <div class="arrival-item">
+                    <p>
+                        <strong>Route {{ arrival.route }}:</strong> 
+                        {{ arrival.arrival_time }}
+                        {% if arrival.status != "On Time" %}
+                            <span class="status-alert">({{ arrival.status }})</span>
+                        {% endif %}
+                    </p>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>No upcoming arrivals available</p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if stations.bus %}
+        <div class="station">
+            <h2>Nearest Bus Stop</h2>
+            <div class="station-info">
+                <p><strong>Stop:</strong> {{ stations.bus.name }}</p>
+                <p><strong>Distance:</strong> {{ stations.bus.distance }}</p>
+                <p><strong>Accessibility:</strong> 
+                    <span class="accessibility {% if stations.bus.wheelchair_accessible %}accessible{% else %}not-accessible{% endif %}">
+                        {{ "Wheelchair Accessible" if stations.bus.wheelchair_accessible else "Not Wheelchair Accessible" }}
+                    </span>
+                </p>
+            </div>
+            
+            {% if stations.bus.arrivals %}
+            <div class="arrivals">
+                <h3>Upcoming Arrivals</h3>
+                {% for arrival in stations.bus.arrivals %}
+                <div class="arrival-item">
+                    <p><strong>Route {{ arrival.route }}:</strong> {{ arrival.arrival_time }} 
+                    <span>({{ arrival.status }})</span></p>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>No upcoming arrivals available</p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <a href="{{ url_for('index') }}" class="back-button">Back to Search</a>
+    </div>
+</body>
+</html> 

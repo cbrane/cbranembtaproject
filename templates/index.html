@@ -2,13 +2,152 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hi</title>
+    <title>MBTA Station Finder</title>
+    <style>
+      :root {
+        --primary-color: #005b96;
+        --secondary-color: #b3cde0;
+        --accent-color: #03396c;
+        --background-color: #f5f7fa;
+        --text-color: #2d3748;
+        --error-color: #e53e3e;
+      }
+
+      body {
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+        box-sizing: border-box;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding: 2rem;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        color: var(--primary-color);
+        margin: 0;
+        font-size: 2.5rem;
+        font-weight: 700;
+      }
+
+      .description {
+        color: #666;
+        margin-top: 1rem;
+        font-size: 1.1rem;
+      }
+
+      .form-container {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1rem;
+        border: 2px solid var(--secondary-color);
+        border-radius: 8px;
+        transition: border-color 0.3s ease;
+        box-sizing: border-box;
+        margin-bottom: 1rem;
+      }
+
+      input[type="text"]:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(0, 91, 150, 0.1);
+      }
+
+      input[type="submit"] {
+        width: 100%;
+        padding: 1rem;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      input[type="submit"]:hover {
+        background-color: var(--accent-color);
+      }
+
+      .error {
+        color: var(--error-color);
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+        padding: 0.5rem;
+        background-color: #fff5f5;
+        border-radius: 4px;
+      }
+
+      @media (max-width: 600px) {
+        .container {
+          padding: 1rem;
+        }
+        
+        .header {
+          padding: 1.5rem;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+      }
+    </style>
   </head>
 
   <body>
-    <h1>Hi</h1>
-    <p>This is an amazing app to help you find the nearest MBTA station</p>
+    <div class="container">
+      <div class="header">
+        <h1>MBTA Station Finder</h1>
+        <p class="description">Enter a place name or address in the Greater Boston area to find the nearest MBTA stations.</p>
+      </div>
+      
+      <div class="form-container">
+        <form action="{{ url_for('nearest_mbta') }}" method="post">
+          {{ form.csrf_token }}
+          <div class="form-group">
+            {{ form.place_name(
+                placeholder="Enter a place name or address",
+                class="input-field"
+            ) }}
+            {% if form.place_name.errors %}
+              <div class="error">
+                {% for error in form.place_name.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+          <input type="submit" value="Find Stations">
+        </form>
+      </div>
+    </div>
   </body>
 </html>
